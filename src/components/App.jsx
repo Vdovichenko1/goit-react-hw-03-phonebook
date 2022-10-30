@@ -4,12 +4,30 @@ import ContactForm from "./ContactForm";
 import Filter from "./Filter";
 import ContactList from "./ContactList";
 
+const LS_KEY = 'reader_item';
 
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedState = localStorage.getItem(LS_KEY);
+    const parseContacts = JSON.parse(savedState);
+    if (parseContacts) {
+      // const parseContacts = savedState;
+      this.setState({contacts: parseContacts})
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      // console.log('Update');
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts))
+    }
+    
+  }
 
   fromSubmitHandler = ({name, number}) => {
     const todo = {
